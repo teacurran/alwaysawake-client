@@ -1,8 +1,16 @@
 import color from 'color';
 
-import { Platform } from 'react-native';
+import { Platform, Dimensions, PixelRatio } from 'react-native';
+
+const deviceHeight = Dimensions.get('window').height;
+const deviceWidth = Dimensions.get('window').width;
+const platform = Platform.OS;
+const platformStyle = undefined;
 
 export default {
+
+  platformStyle,
+  platform,
 
     // Badge
   badgeBg: '#ED1727',
@@ -104,21 +112,21 @@ export default {
 
   // Footer
   footerHeight: 55,
-  footerDefaultBg: (Platform.OS === 'ios') ? '#F8F8F8' : '#4179F7',
+  footerDefaultBg: '#71B340',
 
   // FooterTab
-  tabBarTextColor: (Platform.OS === 'ios') ? '#6b6b6b' : '#b3c7f9',
-  tabBarActiveTextColor: (Platform.OS === 'ios') ? '#007aff' : '#fff',
-  tabActiveBgColor: (Platform.OS === 'ios') ? '#e4f0fe' : undefined,
+  tabBarTextColor: '#FFFFFF',
+  tabBarActiveTextColor: '#000000',
+  tabActiveBgColor: '#71B340',
 
   // Header
-  iosToolbarBtnColor: '#007aff',
-  toolbarDefaultBg: (Platform.OS === 'ios') ? '#F8F8F8' : '#4179F7',
+  iosToolbarBtnColor: '#FFFFFF',
+  toolbarDefaultBg: '#71B340',
   toolbarHeight: (Platform.OS === 'ios') ? 64 : 56,
   toolbarIconSize: (Platform.OS === 'ios') ? 20 : 22,
   toolbarInputColor: '#CECDD2',
   toolbarInverseBg: '#222',
-  toolbarTextColor: (Platform.OS === 'ios') ? '#000' : '#fff',
+  toolbarTextColor: '#FFFFFF',
   get statusBarColor() {
     return color(this.toolbarDefaultBg).darken(0.2).hexString();
   },

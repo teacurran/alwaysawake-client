@@ -1,144 +1,100 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-'use strict';
 
 import React, { Component } from 'react';
-import {
-  AppRegistry,
-  StyleSheet,
-  View
-} from 'react-native';
+import { StyleSheet } from 'react-native';
+import CodePush from 'react-native-code-push';
 
-import { Container, Header, Title, Content, Text, H3, Button, Icon, Footer, FooterTab } from 'native-base';
+import { Container, Content, Text, View } from 'native-base';
+import Modal from 'react-native-modalbox';
+
+import Main from './Main';
+import ProgressBar from './components/loaders/ProgressBar';
 
 import theme from './themes/base-theme';
-
-export default class App extends Component {
-
-  static title = '<TabBarIOS>';
-  static description = 'Tab-based navigation.';
-  static displayName = 'TabBarExample';
-
-  static propTypes = {
-    openDrawer: React.PropTypes.func,
-  };
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      tab1: false,
-      tab2: false,
-      tab3: true,
-      tab4: false,
-    };
-  }
-
-  toggleTab1() {
-    this.setState({
-      tab1: true,
-      tab2: false,
-      tab3: false,
-      tab4: false,
-    });
-  }
-
-  toggleTab2() {
-    this.setState({
-      tab1: false,
-      tab2: true,
-      tab3: false,
-      tab4: false,
-    });
-  }
-
-  toggleTab3() {
-    this.setState({
-      tab1: false,
-      tab2: false,
-      tab3: true,
-      tab4: false,
-    });
-  }
-
-  toggleTab4() {
-    this.setState({
-      tab1: false,
-      tab2: false,
-      tab3: false,
-      tab4: true,
-    });
-  }
-
-  render() {
-    return (
-      <Container theme={theme} style={styles.container}>
-
-        <Header>
-          <Title>Header</Title>
-          <Button transparent onPress={this.props.openDrawer}>
-            <Icon name="ios-menu" />
-          </Button>
-        </Header>
-
-        <Content padder>
-          <H3>This is content section</H3>
-          <Text style={{ marginTop: 10 }}>
-            Selected tab is: {this.state.tab1 ? 1 : this.state.tab2 ? 2 : this.state.tab3 ? 3 : 4}
-          </Text>
-        </Content>
-
-        <Footer >
-          <FooterTab>
-            <Button active={this.state.tab1} onPress={() => this.toggleTab1()} >
-                Apps
-              <Icon name="ios-apps-outline" />
-            </Button>
-            <Button active={this.state.tab2} onPress={() => this.toggleTab2()} >
-                Camera
-              <Icon name="ios-camera-outline" />
-            </Button>
-            <Button active={this.state.tab3} onPress={() => this.toggleTab3()} >
-                Navigate
-              <Icon name="ios-compass" />
-            </Button>
-            <Button active={this.state.tab4} onPress={() => this.toggleTab4()} >
-                Contact
-              <Icon name="ios-contact-outline" />
-            </Button>
-          </FooterTab>
-        </Footer>
-      </Container>
-    );
-  }
-}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width: null,
+    height: null,
+  },
+  modal: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-  tabContent: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  tabText: {
-    color: 'white',
-    margin: 50,
+  modal1: {
+    height: 300,
   },
 });
 
+class App extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      showDownloadingModal: false,
+      showInstalling: false,
+      downloadProgress: 0,
+    };
+  }
+
+  componentDidMount() {
+    CodePush.sync({ updateDialog: true, installMode: CodePush.InstallMode.IMMEDIATE },
+      (status) => {
+        switch (status) {
+          case CodePush.SyncStatus.DOWNLOADING_PACKAGE:
+            this.setState({ showDownloadingModal: true });
+            this._modal.open();
+            break;
+          case CodePush.SyncStatus.INSTALLING_UPDATE:
+            this.setState({ showInstalling: true });
+            break;
+          case CodePush.SyncStatus.UPDATE_INSTALLED:
+            this._modal.close();
+            this.setState({ showDownloadingModal: false });
+            break;
+          default:
+            break;
+        }
+      },
+      ({ receivedBytes, totalBytes }) => {
+        this.setState({ downloadProgress: (receivedBytes / totalBytes) * 100 });
+      }
+    );
+  }
+
+  render() {
+
+    if (this.state.showDownloadingModal) {
+      return (
+        <Container theme={theme} style={{ backgroundColor: theme.defaultBackgroundColor }}>
+          <Content style={styles.container}>
+            <Modal
+              style={[styles.modal, styles.modal1]}
+              backdrop={false}
+              ref={(c) => { this._modal = c; }}
+              swipeToClose={false}
+            >
+              <View style={{ flex: 1, alignSelf: 'stretch', justifyContent: 'center', padding: 20 }}>
+                {this.state.showInstalling ?
+                  <Text style={{ color: theme.brandPrimary, textAlign: 'center', marginBottom: 15, fontSize: 15 }}>
+                    Installing update...
+                  </Text> :
+                  <View style={{ flex: 1, alignSelf: 'stretch', justifyContent: 'center', padding: 20 }}>
+                    <Text style={{ color: theme.brandPrimary, textAlign: 'center', marginBottom: 15, fontSize: 15 }}>
+                      Downloading update... {`${parseInt(this.state.downloadProgress, 10)} %`}
+                    </Text>
+                    <ProgressBar color="theme.brandPrimary" progress={parseInt(this.state.downloadProgress, 10)} />
+                  </View>
+                }
+              </View>
+            </Modal>
+          </Content>
+        </Container>
+      );
+    }
+
+    return <Main/>;
+  }
+}
+
+export default App;
