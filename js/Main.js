@@ -20,7 +20,7 @@ import {
 import { actions } from 'react-native-navigation-redux-helpers';
 import { Router, Scene } from 'react-native-router-flux';
 
-import theme from './themes/base-theme';
+import theme from '../native-base-theme/variables/unified';
 
 export default class Main extends Component {
 
@@ -87,7 +87,7 @@ export default class Main extends Component {
 
   render() {
     return (
-      <StyleProvider style={getTheme((this.props.themeState === 'material') ? material : undefined)}>
+      <StyleProvider style={getTheme(theme)}>
         <Container>
           <Header>
 
@@ -135,30 +135,3 @@ export default class Main extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-  tabContent: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  tabText: {
-    color: 'white',
-    margin: 50,
-  },
-});

@@ -5,22 +5,47 @@ import { Platform, Dimensions, PixelRatio } from 'react-native';
 const deviceHeight = Dimensions.get('window').height;
 const deviceWidth = Dimensions.get('window').width;
 const platform = Platform.OS;
-const platformStyle = undefined;
+const platformStyle = 'unified';
 
 export default {
 
   platformStyle,
   platform,
 
+  // AndroidRipple
+  androidRipple: true,
+  androidRippleColor: 'rgba(256, 256, 256, 0.3)',
+  androidRippleColorDark: 'rgba(0, 0, 0, 0.15)',
+
     // Badge
   badgeBg: '#ED1727',
   badgeColor: '#fff',
-
+    // New Variable
+  badgePadding: (platform === 'ios') ? 3 : 0,
 
     // Button
-  btnFontFamily: (Platform.OS === 'ios') ? 'HelveticaNeue' : 'Roboto_medium',
+  btnFontFamily: (platform === 'ios') ? 'System' : 'Roboto_medium',
   btnDisabledBg: '#b5b5b5',
   btnDisabledClr: '#f1f1f1',
+
+    // CheckBox
+  CheckboxRadius: (platform === 'ios') ? 13 : 0,
+  CheckboxBorderWidth: (platform === 'ios') ? 1 : 2,
+  CheckboxPaddingLeft: (platform === 'ios') ? 4 : 2,
+  CheckboxPaddingBottom: (platform === 'ios') ? 0 : 5,
+  CheckboxIconSize: (platform === 'ios') ? 21 : 14,
+  CheckboxIconMarginTop: (platform === 'ios') ? undefined : 1,
+  CheckboxFontSize: (platform === 'ios') ? (23 / 0.9) : 18,
+  DefaultFontSize: 17,
+  checkboxBgColor: '#039BE5',
+  checkboxSize: 20,
+  checkboxTickColor: '#fff',
+
+    // New Variable
+  get defaultTextColor() {
+    return this.textColor;
+  },
+
 
   get btnPrimaryBg() {
     return this.brandPrimary;
@@ -53,7 +78,7 @@ export default {
     return this.inverseTextColor;
   },
   get btnTextSize() {
-    return (Platform.OS === 'ios') ? this.fontSizeBase * 1.1 :
+    return (platform === 'ios') ? this.fontSizeBase * 1.1 :
         this.fontSizeBase - 1;
   },
   get btnTextSizeLarge() {
@@ -80,23 +105,17 @@ export default {
   cardDefaultBg: '#fff',
 
 
-  // Check Box
-  checkboxBgColor: '#039BE5',
-  checkboxSize: 23,
-  checkboxTickColor: '#fff',
-
-
-  // Color
-  brandPrimary: '#5067FF',
-  brandInfo: '#5bc0de',
+      // Color
+  brandPrimary: '#3F51B5',
+  brandInfo: '#3F57D3',
   brandSuccess: '#5cb85c',
   brandDanger: '#d9534f',
   brandWarning: '#f0ad4e',
   brandSidebar: '#252932',
 
 
-  // Font
-  fontFamily: (Platform.OS === 'ios') ? 'HelveticaNeue' : 'Roboto',
+    // Font
+  fontFamily: (platform === 'ios') ? 'System' : 'Roboto',
   fontSizeBase: 15,
 
   get fontSizeH1() {
@@ -110,36 +129,53 @@ export default {
   },
 
 
-  // Footer
+    // Footer
   footerHeight: 55,
   footerDefaultBg: '#71B340',
 
-  // FooterTab
+    // FooterTab
   tabBarTextColor: '#FFFFFF',
+  tabBarTextSize: (platform === 'ios') ? 14 : 11,
+  activeTab: '#fff',
+  sTabBarActiveTextColor: '#007aff',
   tabBarActiveTextColor: '#000000',
   tabActiveBgColor: '#71B340',
 
-  // Header
-  iosToolbarBtnColor: '#FFFFFF',
+    // Tab
+  tabDefaultBg: '#71B340',
+  topTabBarTextColor: '#b3c7f9',
+  topTabBarActiveTextColor: '#fff',
+  topTabActiveBgColor: undefined,
+  topTabBarBorderColor: '#fff',
+  topTabBarActiveBorderColor: '#fff',
+
+
+    // Header
+  toolbarBtnColor: '#fff',
   toolbarDefaultBg: '#71B340',
-  toolbarHeight: (Platform.OS === 'ios') ? 64 : 56,
-  toolbarIconSize: (Platform.OS === 'ios') ? 20 : 22,
-  toolbarInputColor: '#CECDD2',
+  toolbarHeight: (platform === 'ios') ? 76 : 56,
+  toolbarIconSize: (platform === 'ios') ? 20 : 22,
+  toolbarSearchIconSize: (platform === 'ios') ? 20 : 23,
+  toolbarInputColor: '#fff',
+  searchBarHeight: (platform === 'ios') ? 30 : 40,
   toolbarInverseBg: '#222',
-  toolbarTextColor: '#FFFFFF',
+  toolbarTextColor: '#fff',
+  toolbarDefaultBorder: '#3F51B5',
+  iosStatusbar: 'light-content',
   get statusBarColor() {
     return color(this.toolbarDefaultBg).darken(0.2).hexString();
   },
 
 
-  // Icon
+    // Icon
   iconFamily: 'Ionicons',
-  iconFontSize: (Platform.OS === 'ios') ? 30 : 28,
+  iconFontSize: (platform === 'ios') ? 30 : 28,
   iconMargin: 7,
+  iconHeaderSize: (platform === 'ios') ? 29 : 28,
 
 
-  // InputGroup
-  inputFontSize: 15,
+    // InputGroup
+  inputFontSize: 17,
   inputBorderColor: '#D9D5DC',
   inputSuccessBorderColor: '#2b8339',
   inputErrorBorderColor: '#ed2f2f',
@@ -152,7 +188,7 @@ export default {
   },
 
   inputGroupMarginBottom: 10,
-  inputHeightBase: 40,
+  inputHeightBase: 50,
   inputPaddingLeft: 5,
 
   get inputPaddingLeftIcon() {
@@ -160,31 +196,42 @@ export default {
   },
 
 
-  // Line Height
+    // Line Height
   btnLineHeight: 19,
   lineHeightH1: 32,
   lineHeightH2: 27,
-  lineHeightH3: (Platform.OS === 'ios') ? 22 : 25,
-  iconLineHeight: (Platform.OS === 'ios') ? 37 : 30,
-  lineHeight: (Platform.OS === 'ios') ? 20 : 24,
+  lineHeightH3: 22,
+  iconLineHeight: (platform === 'ios') ? 37 : 30,
+  lineHeight: (platform === 'ios') ? 20 : 24,
 
 
-  // List
-  listBorderColor: '#ddd',
-  listDividerBg: '#ddd',
+    // List
+  listBorderColor: '#c9c9c9',
+  listDividerBg: '#f4f4f4',
   listItemHeight: 45,
-  listItemPadding: 9,
+
+    // Card
+  cardBorderColor: '#ccc',
+
+    // Changed Variable
+  listItemPadding: (platform === 'ios') ? 10 : 12,
+
   listNoteColor: '#808080',
   listNoteSize: 13,
 
 
-  // Progress Bar
+    // Progress Bar
   defaultProgressColor: '#E4202D',
   inverseProgressColor: '#1A191B',
 
 
-  // Radio Button
-  radioBtnSize: (Platform.OS === 'ios') ? 25 : 23,
+    // Radio Button
+  radioBtnSize: (platform === 'ios') ? 25 : 23,
+  radioSelectedColorAndroid: '#5067FF',
+
+    // New Variable
+  radioBtnLineHeight: (platform === 'ios') ? 29 : 24,
+
   radioColor: '#7e7e7e',
 
   get radioSelectedColor() {
@@ -192,34 +239,36 @@ export default {
   },
 
 
-  // Spinner
+    // Spinner
   defaultSpinnerColor: '#45D56E',
   inverseSpinnerColor: '#1A191B',
 
 
-  // Tabs
-  // tabBgColor: '#F8F8F8',
-  // tabFontSize: 15,
-  // tabTextColor: '#fff',
-  tabBgColor: (Platform.OS === 'ios') ? '#F8F8F8' : '#4179F7',
+    // Tabs
+  tabBgColor: '#F8F8F8',
   tabFontSize: 15,
-  tabTextColor: (Platform.OS === 'ios') ? '#007aff' : '#fff',
+  tabTextColor: '#222222',
 
 
-  // Text
+    // Text
   textColor: '#000',
   inverseTextColor: '#fff',
+  noteFontSize: 14,
 
 
-  // Title
-  titleFontSize: (Platform.OS === 'ios') ? 17 : 19,
-  subTitleFontSize: (Platform.OS === 'ios') ? 12 : 14,
-  subtitleColor: '#8e8e93',
+    // Title
+  titleFontfamily: (platform === 'ios') ? 'System' : 'Roboto_medium',
+  titleFontSize: (platform === 'ios') ? 17 : 19,
+  subTitleFontSize: (platform === 'ios') ? 12 : 14,
+  subtitleColor: (platform === 'ios') ? '#8e8e93' : '#FFF',
+
+    // New Variable
+  titleFontColor: '#FFF',
 
 
-  // Other
-  borderRadiusBase: (Platform.OS === 'ios') ? 5 : 2,
-  borderWidth: 1,
+    // Other
+  borderRadiusBase: 2,
+  borderWidth: (1/PixelRatio.getPixelSizeForLayoutSize(1)),
   contentPadding: 10,
 
   get darkenHeader() {
@@ -231,4 +280,9 @@ export default {
   inputLineHeight: 24,
   jumbotronBg: '#C9C9CE',
   jumbotronPadding: 30,
+  deviceWidth,
+  deviceHeight,
+
+    // New Variable
+  inputGroupRoundedBorderRadius: 30,
 };

@@ -9,7 +9,7 @@ import Modal from 'react-native-modalbox';
 import Main from './Main';
 import ProgressBar from './components/loaders/ProgressBar';
 
-import theme from './themes/base-theme';
+import theme from '../native-base-theme/variables/unified';
 
 const styles = StyleSheet.create({
   container: {
